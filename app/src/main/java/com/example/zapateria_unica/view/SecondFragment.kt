@@ -1,23 +1,31 @@
 package com.example.zapateria_unica.view
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.example.zapateria_unica.R
 import com.example.zapateria_unica.databinding.FragmentSecondBinding
+import com.example.zapateria_unica.model.local.entities.ZapatoDetalle //model. Chequear!!!
+import com.example.zapateria_unica.viewmodel.ZapateriaViewModel
 
-/**
- * A simple [Fragment] subclass as the second destination in the navigation.
- */
 class SecondFragment : Fragment() {
 
     private var _binding: FragmentSecondBinding? = null
+    private val viewModel: ZapateriaViewModel by activityViewModels()
+    private val delayMillis = 0L //tpo. retardo
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -33,8 +41,110 @@ class SecondFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonSecond.setOnClickListener {
-            findNavController().navigate(R.id.action_SecondFragment_to_FirstFragment)
+        resetScreen()
+
+        val id: Int? = arguments?.getInt("id", 0)
+
+        if (id != null) {
+            viewModel.fetchZapatoDetalle(id)
+            observeZapatoDetalles(id)
+        }
+    }
+
+    private fun observeZapatoDetalles(id: Int) {
+        //viewModel.zapatoDetalles.observe(viewLifecycleOwner, Observer {
+        viewModel.getZapatoDetalles().observe(viewLifecycleOwner, Observer {
+            if (it != null) {
+                viewModel.getZapatoDetalleById(id)
+                observeZapatoDetalle()
+            }
+        })
+    }
+
+    private fun observeZapatoDetalle() {
+        //viewModel.zapatoDetalle?.observe(viewLifecycleOwner, Observer {
+        viewModel.getZapatoDetalle()?.observe(viewLifecycleOwner, Observer {
+            if (it != null) showData(it)
+            else showNoData()
+        })
+    }
+
+    private fun showData(zapatoDetalle: ZapatoDetalle?) {
+        if (zapatoDetalle != null) {
+            binding.tvName.text = zapatoDetalle.nombre
+            Glide.with(requireContext()).load(zapatoDetalle.imagenLink).into(binding.ivImage)
+
+            binding.tvOrigen.text =
+                getString(R.string.label_origen, zapatoDetalle.origen)
+            binding.tvMarca.text =
+                getString(R.string.label_marca, zapatoDetalle.marca)
+            binding.tvNumero.text =
+                getString(R.string.label_numero, zapatoDetalle.numero.toString())
+            binding.tvPrecio.text =
+                getString(R.string.label_precio, zapatoDetalle.precio.toString())
+
+            if (zapatoDetalle.entrega)
+                binding.tvEntrega.text = getString(R.string.label_entrega_yes)
+            else
+                binding.tvEntrega.text = getString(R.string.label_entrega_no)
+
+            binding.btnEmail.setOnClickListener { enviarEmail(zapatoDetalle) }
+
+            updateScreen()
+        }
+    }
+
+    private fun resetScreen() {
+        binding.nestedScrollView.visibility = View.GONE
+        binding.tvNoData.visibility = View.GONE
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun showNoData() {
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            binding.nestedScrollView.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
+            binding.tvNoData.visibility = View.VISIBLE
+        }, delayMillis)
+    }
+
+    /* Se incluye opcion de un pequeño retardo al actualizar la pantalla, en caso de que
+     * demore un poco en actualizar los datos.
+     */
+    private fun updateScreen() {
+        val handler = Handler(Looper.getMainLooper())
+        handler.postDelayed({
+            binding.progressBar.visibility = View.GONE
+            binding.tvNoData.visibility = View.GONE
+            binding.nestedScrollView.visibility = View.VISIBLE
+        }, delayMillis)
+    }
+
+    private fun enviarEmail(zapatoDetalle: ZapatoDetalle) {
+        val destinatarios: Array<String> = arrayOf(getString(R.string.email_destinatarios))
+        val asunto: String = getString(
+            R.string.email_asunto,
+            zapatoDetalle.nombre,
+            zapatoDetalle.id.toString()
+        )
+        val mensaje: String = getString(
+            R.string.email_mensaje,
+            zapatoDetalle.nombre,
+            zapatoDetalle.id.toString()
+        )
+
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.data = Uri.parse(getString(R.string.email_uri_string))
+        intent.type = getString(R.string.email_type)
+        intent.putExtra(Intent.EXTRA_EMAIL, destinatarios)
+        intent.putExtra(Intent.EXTRA_SUBJECT, asunto)
+        intent.putExtra(Intent.EXTRA_TEXT, mensaje)
+
+        try {
+            startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
         }
     }
 
