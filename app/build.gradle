@@ -105,11 +105,4 @@ dependencies {
     testImplementation 'com.squareup.retrofit2:retrofit:2.9.0'
     testImplementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
-    //para SecondFragmentTest
-    //androidTestImplementation 'androidx.test.ext:junit:1.1.5' //repetido
-    //androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1' //repetido
-    androidTestImplementation 'androidx.test:rules:1.5.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.5.1'
-    androidTestImplementation 'org.mockito:mockito-core:3.11.0'
-
 }

@@ -12,11 +12,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.zapateria_unica.R
 import com.example.zapateria_unica.databinding.FragmentSecondBinding
-import com.example.zapateria_unica.model.local.entities.ZapatoDetalle //model. Chequear!!!
 import com.example.zapateria_unica.viewmodel.ZapateriaViewModel
 
 class SecondFragment : Fragment() {
@@ -52,7 +50,6 @@ class SecondFragment : Fragment() {
     }
 
     private fun observeZapatoDetalles(id: Int) {
-        //viewModel.zapatoDetalles.observe(viewLifecycleOwner, Observer {
         viewModel.getZapatoDetalles().observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 viewModel.getZapatoDetalleById(id)
@@ -62,36 +59,36 @@ class SecondFragment : Fragment() {
     }
 
     private fun observeZapatoDetalle() {
-        //viewModel.zapatoDetalle?.observe(viewLifecycleOwner, Observer {
         viewModel.getZapatoDetalle()?.observe(viewLifecycleOwner, Observer {
-            if (it != null) showData(it)
-            else showNoData()
+            if (it != null) {
+                binding.tvName.text = it.nombre
+                Glide.with(requireContext()).load(it.imagenLink).into(binding.ivImage)
+
+                binding.tvOrigen.text =
+                    getString(R.string.label_origen, it.origen)
+                binding.tvMarca.text =
+                    getString(R.string.label_marca, it.marca)
+                binding.tvNumero.text =
+                    getString(R.string.label_numero, it.numero.toString())
+                binding.tvPrecio.text =
+                    getString(R.string.label_precio, it.precio.toString())
+
+                if (it.entrega)
+                    binding.tvEntrega.text = getString(R.string.label_entrega_yes)
+                else
+                    binding.tvEntrega.text = getString(R.string.label_entrega_no)
+
+                //envia correo al presionar boton
+                val id: Int = it.id
+                val nombre: String = it.nombre
+                binding.btnEmail.setOnClickListener { enviarEmail(id, nombre) }
+
+                //actualiza pantalla
+                updateScreen()
+            } else {
+                showNoData()
+            }
         })
-    }
-
-    private fun showData(zapatoDetalle: ZapatoDetalle?) {
-        if (zapatoDetalle != null) {
-            binding.tvName.text = zapatoDetalle.nombre
-            Glide.with(requireContext()).load(zapatoDetalle.imagenLink).into(binding.ivImage)
-
-            binding.tvOrigen.text =
-                getString(R.string.label_origen, zapatoDetalle.origen)
-            binding.tvMarca.text =
-                getString(R.string.label_marca, zapatoDetalle.marca)
-            binding.tvNumero.text =
-                getString(R.string.label_numero, zapatoDetalle.numero.toString())
-            binding.tvPrecio.text =
-                getString(R.string.label_precio, zapatoDetalle.precio.toString())
-
-            if (zapatoDetalle.entrega)
-                binding.tvEntrega.text = getString(R.string.label_entrega_yes)
-            else
-                binding.tvEntrega.text = getString(R.string.label_entrega_no)
-
-            binding.btnEmail.setOnClickListener { enviarEmail(zapatoDetalle) }
-
-            updateScreen()
-        }
     }
 
     private fun resetScreen() {
@@ -121,22 +118,14 @@ class SecondFragment : Fragment() {
         }, delayMillis)
     }
 
-    private fun enviarEmail(zapatoDetalle: ZapatoDetalle) {
+    private fun enviarEmail(id: Int, nombre: String) {
         val destinatarios: Array<String> = arrayOf(getString(R.string.email_destinatarios))
-        val asunto: String = getString(
-            R.string.email_asunto,
-            zapatoDetalle.nombre,
-            zapatoDetalle.id.toString()
-        )
-        val mensaje: String = getString(
-            R.string.email_mensaje,
-            zapatoDetalle.nombre,
-            zapatoDetalle.id.toString()
-        )
+        val asunto: String = getString(R.string.email_asunto, nombre, id.toString())
+        val mensaje: String = getString(R.string.email_mensaje, nombre, id.toString())
 
         val intent = Intent(Intent.ACTION_SEND)
-        intent.data = Uri.parse(getString(R.string.email_uri_string))
-        intent.type = getString(R.string.email_type)
+        intent.data = Uri.parse("mailto")
+        intent.type = "text/plain"
         intent.putExtra(Intent.EXTRA_EMAIL, destinatarios)
         intent.putExtra(Intent.EXTRA_SUBJECT, asunto)
         intent.putExtra(Intent.EXTRA_TEXT, mensaje)

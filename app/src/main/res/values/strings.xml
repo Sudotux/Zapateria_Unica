@@ -12,8 +12,6 @@
     <string name="label_entrega_yes">Cuenta con despacho</string>
     <string name="label_entrega_no">Sin despacho</string>
     <string name="btn_email">Contactar Area de Ventas</string>
-    <string name="email_uri_string">mailto</string>
-    <string name="email_type">text/plain</string>
     <string name="email_destinatarios">Zapato.ventas@unica.cl</string>
     <string name="email_asunto">Consulta por Producto %1$s id %2$s</string>
     <string name="email_mensaje">Hola\n\nVi el producto %1$s de código %2$s y me gustaría que me

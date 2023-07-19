@@ -34,7 +34,7 @@ class FirstAdapter(private var datalist: List<Zapato>) :
 
         //Dado que falta la propiedad precio en la lista del primer endpoint, se reemplaza por
         //el unico entero luego del id, como reemplazo. En SecondFragment se muestra el precio real.
-        holder.tvPrecio.text = "$ ${zapato.numero}"
+        holder.tvPrecio.text = zapato.numero.toString()
 
         holder.itemView.setOnClickListener {
             selectedItemId.value = zapato.id

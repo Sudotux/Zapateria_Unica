@@ -52,7 +52,6 @@ class FirstFragment : Fragment() {
     }
 
     private fun observeZapatos() {
-        //viewModel.zapatos.observe(viewLifecycleOwner, Observer {
         viewModel.getZapatos().observe(viewLifecycleOwner, Observer {
             adapter.setData(it)
         })
