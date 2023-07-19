@@ -95,10 +95,10 @@ dependencies {
     //fragment
     androidTestImplementation 'androidx.fragment:fragment-testing:1.6.0'
 
-    //para MovilDaoInstrumentedTest
+    //para ZapateriaDaoInstrumentedTest
     androidTestImplementation 'androidx.arch.core:core-testing:2.2.0'
 
-    //para MovilApiUnitTest
+    //para ZapateriaApiUnitTest
     //testImplementation 'junit:junit:4.13.2' //repetido
     testImplementation 'com.squareup.okhttp3:mockwebserver:4.11.0'
     testImplementation 'com.google.code.gson:gson:2.10.1'
