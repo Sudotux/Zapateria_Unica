@@ -20,14 +20,4 @@
             android:layout_height="wrap_content" />
     </androidx.core.widget.NestedScrollView>
 
-    <!--
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnViewCart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="10dp"
-        android:text="@string/btn_ver_carro" />
-    -->
-
 </LinearLayout>
