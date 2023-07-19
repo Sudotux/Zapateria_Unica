@@ -1,4 +1,4 @@
-package com.example.zapateria_unica
+package com.example.zapateria_unica.view
 
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
@@ -10,6 +10,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import com.example.zapateria_unica.R
 import com.example.zapateria_unica.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

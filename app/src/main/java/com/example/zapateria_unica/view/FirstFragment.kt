@@ -1,4 +1,4 @@
-package com.example.zapateria_unica
+package com.example.zapateria_unica.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.example.zapateria_unica.R
 import com.example.zapateria_unica.databinding.FragmentFirstBinding
 
 /**
