@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitClient {
 
     companion object {
-        private const val BASE_URL = "https://prueba-mariocanedo.vercel.app/shoes/"
+        private const val BASE_URL = "https://prueba-mariocanedo.vercel.app/"
 
         fun getRetrofit(): ZapateriaApi {
             val retrofit: Retrofit = Retrofit.Builder()

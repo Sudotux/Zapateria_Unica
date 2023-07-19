@@ -5,19 +5,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.zapateria_unica.R
 import com.example.zapateria_unica.databinding.FragmentFirstBinding
+import com.example.zapateria_unica.viewmodel.ZapateriaViewModel
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
+    private val viewModel: ZapateriaViewModel by activityViewModels()
+    private lateinit var adapter: FirstAdapter
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -33,9 +35,41 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonFirst.setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
-        }
+        adapter = FirstAdapter(emptyList())
+        setupRecyclerView()
+
+        //por si se quiere borrar los datos guardados
+        //viewModel.deleteAllZapatoDetalles()
+    }
+
+    private fun setupRecyclerView() {
+        binding.recyclerViewFirst.adapter = adapter
+        binding.recyclerViewFirst.layoutManager = GridLayoutManager(context, 2)
+        binding.recyclerViewFirst.setHasFixedSize(false)
+
+        observeZapatos()
+        observeSelectedtemId()
+    }
+
+    private fun observeZapatos() {
+        //viewModel.zapatos.observe(viewLifecycleOwner, Observer {
+        viewModel.getZapatos().observe(viewLifecycleOwner, Observer {
+            adapter.setData(it)
+        })
+    }
+
+    private fun observeSelectedtemId() {
+        adapter.selectedItemId.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                changeFragment(it)
+            }
+        })
+    }
+
+    private fun changeFragment(id: Int) {
+        val args = Bundle()
+        args.putInt("id", id)
+        findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment, args)
     }
 
     override fun onDestroyView() {

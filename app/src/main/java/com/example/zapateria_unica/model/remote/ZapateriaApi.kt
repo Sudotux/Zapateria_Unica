@@ -8,10 +8,10 @@ import retrofit2.http.Path
 
 interface ZapateriaApi {
 
-    @GET
+    @GET("shoes")
     suspend fun fetchZapatos(): Response<List<ZapatoDC>>
 
-    @GET("/{id}")
+    @GET("shoes/{id}")
     suspend fun fetchZapatoDetalle(@Path("id") id: Int) : Response<ZapatoDetalleDC>
 
 }
