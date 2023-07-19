@@ -2,7 +2,6 @@ package com.example.zapateria_unica.model
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-
 import com.example.zapateria_unica.model.local.ZapateriaDao
 import com.example.zapateria_unica.model.local.entities.Zapato
 import com.example.zapateria_unica.model.local.entities.ZapatoDetalle

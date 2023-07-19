@@ -16,13 +16,9 @@ class ZapateriaViewModel(application: Application) : AndroidViewModel(applicatio
     private val repository: ZapateriaRepository =
         ZapateriaRepository(ZapateriaDataBase.getDataBase(application).getZapateriaDao())
 
-    //val zapatos: LiveData<List<Zapato>> = repository.zapatos
-    //val zapatoDetalles: LiveData<List<ZapatoDetalle>> = repository.zapatoDetalles
-    //var zapatoDetalle: LiveData<ZapatoDetalle>? = null
-
-    private val zapatos: LiveData<List<Zapato>> = repository.zapatos //pal final
-    private val zapatoDetalles: LiveData<List<ZapatoDetalle>> = repository.zapatoDetalles //pal final
-    private var zapatoDetalle: LiveData<ZapatoDetalle>? = null //pal final
+    private val zapatos: LiveData<List<Zapato>> = repository.zapatos
+    private val zapatoDetalles: LiveData<List<ZapatoDetalle>> = repository.zapatoDetalles
+    private var zapatoDetalle: LiveData<ZapatoDetalle>? = null
 
     init {
         fetchZapatos()
@@ -38,17 +34,12 @@ class ZapateriaViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun getZapatoDetalleById(id: Int) = viewModelScope.launch {
         zapatoDetalle = repository.getZapatoDetalleById(id)
-        //setZapatoDetalle(repository.getZapatoDetalleById(id)) //pal final
     }
 
     fun deleteAllZapatoDetalles() = viewModelScope.launch {
         repository.deleteAllZapatoDetalles()
     }
 
-
-    /** Pal final **/
-
-    /* Getters */
     fun getZapatos(): LiveData<List<Zapato>> {
         return zapatos
     }
